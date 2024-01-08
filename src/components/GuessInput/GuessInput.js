@@ -1,13 +1,15 @@
 import React from "react";
 
+import { NUM_OF_LETTERS_ALLOWED } from "../../constants";
+
 function GuessInput({ handleGuessSubmit }) {
   const [guess, setGuess] = React.useState("");
 
   function handleFormSubmit(event) {
     event.preventDefault();
     const allLetters = guess.split("").every((c) => c.match(/^[a-z]$/gi));
-    if (guess.length !== 5 || !allLetters) {
-      alert("Please enter a 5 letter word!");
+    if (guess.length !== NUM_OF_LETTERS_ALLOWED || !allLetters) {
+      window.alert(`Please enter a ${NUM_OF_LETTERS_ALLOWED} letter word!`);
     }
     handleGuessSubmit(guess);
     setGuess("");
@@ -26,8 +28,8 @@ function GuessInput({ handleGuessSubmit }) {
         value={guess}
         onChange={handleGuessChange}
         required
-        pattern="[a-zA-Z]{5}"
-        title="5 letter word"
+        pattern={`[a-zA-Z]{${NUM_OF_LETTERS_ALLOWED}}`}
+        title={`${NUM_OF_LETTERS_ALLOWED} letter word`}
       />
     </form>
   );
