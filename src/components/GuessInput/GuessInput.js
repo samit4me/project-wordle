@@ -1,6 +1,6 @@
 import React from "react";
 
-function GuessInput() {
+function GuessInput({ handleGuessSubmit }) {
   const [guess, setGuess] = React.useState("");
 
   function handleFormSubmit(event) {
@@ -9,7 +9,7 @@ function GuessInput() {
     if (guess.length !== 5 || !allLetters) {
       alert("Please enter a 5 letter word!");
     }
-    console.log({ guess });
+    handleGuessSubmit(guess);
     setGuess("");
   }
 
