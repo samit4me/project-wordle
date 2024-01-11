@@ -6,12 +6,11 @@ import GuessInput from "../GuessInput";
 import GuessResult from "../GuessResult";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
+function RestartGameButton({ handleRestart }) {
+  return <button onClick={handleRestart}>Restart Game</button>;
+}
 
-function WonBanner({ numOfGuesses }) {
+function WonBanner({ numOfGuesses, handleRestart }) {
   return (
     <div className="happy banner">
       <p>
@@ -21,29 +20,39 @@ function WonBanner({ numOfGuesses }) {
         </strong>
         .
       </p>
+      <RestartGameButton handleRestart={handleRestart} />
     </div>
   );
 }
 
-function LostBanner() {
+function LostBanner({ answer, handleRestart }) {
   return (
     <div className="sad banner">
       <p>
         Sorry, the correct answer is <strong>{answer}</strong>.
       </p>
+      <RestartGameButton handleRestart={handleRestart} />
     </div>
   );
 }
 
 function Game() {
+  const [answer, setAnswer] = React.useState(() => sample(WORDS));
   const [guesses, setGuesses] = React.useState([]);
   const gameWon = guesses.some((guess) => guess?.value === answer);
   const gameLost = !gameWon && guesses.length === NUM_OF_GUESSES_ALLOWED;
   const gameComplete = gameWon || gameLost;
 
+  console.log("#### ~ answer:", answer);
+
   function handleGuessSubmit(guess) {
     const nextGuesses = [...guesses, { id: crypto.randomUUID(), value: guess }];
     setGuesses(nextGuesses);
+  }
+
+  function handleRestart() {
+    setAnswer(sample(WORDS));
+    setGuesses([]);
   }
 
   return (
@@ -53,8 +62,13 @@ function Game() {
         disabled={gameComplete}
         handleGuessSubmit={handleGuessSubmit}
       />
-      {gameWon && <WonBanner numOfGuesses={guesses.length} />}
-      {gameLost && <LostBanner />}
+      {gameWon && (
+        <WonBanner
+          numOfGuesses={guesses.length}
+          handleRestart={handleRestart}
+        />
+      )}
+      {gameLost && <LostBanner answer={answer} handleRestart={handleRestart} />}
     </>
   );
 }
