@@ -2,7 +2,7 @@ import React from "react";
 
 import { NUM_OF_LETTERS_ALLOWED } from "../../constants";
 
-function GuessInput({ handleGuessSubmit }) {
+function GuessInput({ disabled = false, handleGuessSubmit }) {
   const [guess, setGuess] = React.useState("");
 
   function handleFormSubmit(event) {
@@ -26,6 +26,7 @@ function GuessInput({ handleGuessSubmit }) {
         id="guess-input"
         type="text"
         value={guess}
+        disabled={disabled}
         onChange={handleGuessChange}
         required
         pattern={`[a-zA-Z]{${NUM_OF_LETTERS_ALLOWED}}`}
