@@ -5,6 +5,8 @@ import { WORDS } from "../../data";
 import GuessInput from "../GuessInput";
 import GuessResult from "../GuessResult";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
+import Keyboard from "../Keyboard/Keyboard";
+import { checkGuess } from "../../game-helpers";
 
 function RestartGameButton({ handleRestart }) {
   return <button onClick={handleRestart}>Restart Game</button>;
@@ -42,6 +44,7 @@ function Game() {
   const gameWon = guesses.some((guess) => guess?.value === answer);
   const gameLost = !gameWon && guesses.length === NUM_OF_GUESSES_ALLOWED;
   const gameComplete = gameWon || gameLost;
+  const guessResults = guesses.map(({ value }) => checkGuess(value, answer));
 
   console.log("#### ~ answer:", answer);
 
@@ -57,11 +60,12 @@ function Game() {
 
   return (
     <>
-      <GuessResult answer={answer} guesses={guesses} />
+      <GuessResult guessResults={guessResults} />
       <GuessInput
         disabled={gameComplete}
         handleGuessSubmit={handleGuessSubmit}
       />
+      <Keyboard guessResults={guessResults} />
       {gameWon && (
         <WonBanner
           numOfGuesses={guesses.length}
